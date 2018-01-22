@@ -1,9 +1,15 @@
+from urllib.request import urlopen
 from math import pi, cos
-data = open('angles_UCI_CS.csv')
-data.readline()  # ignore the first line
 
-print('station_id   angle_degrees')
+URL = 'http://rapid-hub.org/data/angles_UCI_CS.csv'
+
+data = urlopen(URL)
+
+header = data.readline().decode('utf-8').strip().split(',')
+header.append('cosine')
+print('   '.join(header))
+
 for line in data:
-    id, angle_deg = [int(x) for x in line.strip().split(',')]
-    angle_rad = angle_deg * pi / 180
-    print('{:10}   {:13f}'.format(id, cos(angle_rad)))
+    id, angle_deg = line.decode('utf-8').strip().split(',')
+    angle_rad = int(angle_deg) * pi / 180
+    print('{:>10}   {:>14}   {:f}'.format(id, angle_deg, cos(angle_rad)))
