@@ -1,0 +1,23 @@
+build: false
+
+environment:
+  matrix:
+    - PYTHON_PATH: C:\Python33
+    - PYTHON_PATH: C:\Python33-x64
+    - PYTHON_PATH: C:\Python34
+    - PYTHON_PATH: C:\Python34-x64
+    - PYTHON_PATH: C:\Python35
+    - PYTHON_PATH: C:\Python35-x64
+    - PYTHON_PATH: C:\Python36
+    - PYTHON_PATH: C:\Python36-x64
+
+init:
+  - cmd: set "PATH=%PYTHON_PATH%\Scripts;%PYTHON_PATH%;%PATH%"
+
+install:
+  - cmd: pip install -r requirements.pip
+
+test_script:
+  - cmd: python tst/tst_dwnl.py http://rapid-hub.org/data/angles_UCI_CS.csv
+  - cmd: python tst/tst_dwnl.py http://rapid-hub.org/data/angles_UCI_CS_out.csv
+  - cmd: tst/tst_repr.bat src/compute_cosines.py angles_UCI_CS.csv angles_UCI_CS_out.csv tst/tst_comp_csv.py
