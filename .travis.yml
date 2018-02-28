@@ -1,11 +1,32 @@
 language: python
-python:
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "3.5-dev"
-  - "3.6"
-  - "3.6-dev"
-  - "3.7-dev"
-  - "nightly"
-script: python main.py
+
+matrix:
+    include:
+        - os: linux
+          dist: trusty
+          sudo: required
+          python: 3.3
+        - os: linux
+          dist: trusty
+          sudo: required
+          python: 3.4
+        - os: linux
+          dist: trusty
+          sudo: required
+          python: 3.5
+        - os: linux
+          dist: trusty
+          sudo: required
+          python: 3.6
+
+before_install:
+  - sudo apt-get update -q
+  - sudo apt-get install -y `grep -ve '^#' requirements.apt`
+
+install:
+  - pip install -r requirements.pip
+
+script:
+  - tst/tst_dwnl.py http://rapid-hub.org/data/angles_UCI_CS.csv
+  - tst/tst_dwnl.py http://rapid-hub.org/data/angles_UCI_CS_out.csv
+  - tst/tst_repr.sh src/compute_cosines.py angles_UCI_CS.csv angles_UCI_CS_out.csv tst/tst_comp_csv.py
